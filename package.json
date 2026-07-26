@@ -36,7 +36,8 @@
     "semver": "7.8.5",
     "send": "1.2.1",
     "tar": "7.5.22",
-    "uuid": "14.0.1"
+    "uuid": "14.0.1",
+    "turbo-stream": "3.2.0"
   },
   "private": true
 }
