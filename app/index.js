@@ -1,27 +1,49 @@
 import { Pressable, Text, TextInput, View } from "react-native";
 import React from "react";
 import Styles from "../styles/page-styles";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 export default function Page() {
+
+  const router = useRouter();
 
   const [person, onChangeName] = React.useState("");
   const [adjective, onChangeAdjective] = React.useState("");
   const [event, onChangeEvent] = React.useState("");
+  const [error, setError] = React.useState("");
 
-  const instruct = "Fill in all the boxs below \n and press 'Make my Hall Pass' to get your pass!";
+  const instruct = "Fill in all the boxes below \n and press 'Make my Hall Pass' to get your pass!";
 
   const clearFields = () => {
     onChangeName("");
     onChangeAdjective("");
     onChangeEvent("");
+    setError("");
+  }
+
+  const handleSubmit = () => {
+    const trimmedPerson = person.trim();
+    const trimmedAdjective = adjective.trim();
+    const trimmedEvent = event.trim();
+
+    if (!trimmedPerson || !trimmedAdjective || !trimmedEvent) {
+      setError("Please fill in all three boxes before making your pass!");
+      return;
+    }
+
+    setError("");
+    router.push({
+      pathname: "/page2",
+      params: { person: trimmedPerson, adjective: trimmedAdjective, event: trimmedEvent },
+    });
   }
 
   return (
     <View style={Styles.page}>
       <Text style={Styles.title}>Assignment 1</Text>
       <Text style={Styles.subtitle}>Hall Pass Mad Libs</Text>
-      <Text style={Styles.instStyle}>Fill in all the boxs below and press 'Make my Hall Pass' to get your pass!</Text>
+      <Text style={Styles.instStyle}>{instruct}</Text>
+      {error ? <Text style={Styles.error}>{error}</Text> : null}
       <TextInput
         style={Styles.input}
         onChangeText={onChangeName}
@@ -41,17 +63,9 @@ export default function Page() {
         placeholder="An Event"
       />
       <View style={Styles.container}>
-        <Link
-        style={Styles.button}
-        href={{
-          pathname: "/page2",
-          params: { person, adjective, event },
-        }} asChild
-        >
-          <Pressable>
-            <Text>Make my Hall Pass!</Text>
-          </Pressable>
-        </Link>
+        <Pressable style={Styles.button} onPress={handleSubmit}>
+          <Text>Make my Hall Pass!</Text>
+        </Pressable>
         <Link
          style={Styles.button} 
          onPress={clearFields}

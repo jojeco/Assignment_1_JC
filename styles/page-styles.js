@@ -26,6 +26,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     padding: 20,
   },
+  error: {
+    color: '#c0392b',
+    textAlign: 'center',
+    fontSize: 14,
+    marginBottom: 10,
+  },
   input: {
     width: '80%',
     height: 40,
@@ -67,7 +73,7 @@ const styles = StyleSheet.create({
     borderColor: "#000033",
     borderWidth: 1,
     width: 350,
-    height: -100,
+    height: 250,
     marginBottom: 30,
     marginTop: 15,
     maxHeight: 250,
