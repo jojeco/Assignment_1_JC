@@ -9,7 +9,7 @@ export default function Page() {
   const [adjective, onChangeAdjective] = React.useState("");
   const [event, onChangeEvent] = React.useState("");
 
-  const instruct = "Fill in all the boxs below \n and press 'Make my Hall Pass' to get your pass!";
+  const instruct = "Fill in all the boxes below \n and press 'Make my Hall Pass' to get your pass!";
 
   const clearFields = () => {
     onChangeName("");
@@ -21,7 +21,7 @@ export default function Page() {
     <View style={Styles.page}>
       <Text style={Styles.title}>Assignment 1</Text>
       <Text style={Styles.subtitle}>Hall Pass Mad Libs</Text>
-      <Text style={Styles.instStyle}>Fill in all the boxs below and press 'Make my Hall Pass' to get your pass!</Text>
+      <Text style={Styles.instStyle}>{instruct}</Text>
       <TextInput
         style={Styles.input}
         onChangeText={onChangeName}
@@ -52,15 +52,9 @@ export default function Page() {
             <Text>Make my Hall Pass!</Text>
           </Pressable>
         </Link>
-        <Link
-         style={Styles.button} 
-         onPress={clearFields}
-         href={"."}
-        >
-          <Pressable>
-            <Text>Clear Text</Text>
-          </Pressable>
-        </Link>
+        <Pressable style={Styles.button} onPress={clearFields}>
+          <Text>Clear Text</Text>
+        </Pressable>
       </View>
     </View>
   );
