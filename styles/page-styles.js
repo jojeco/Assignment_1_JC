@@ -41,6 +41,10 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
   },
+  buttonDisabled: {
+    backgroundColor: "#cccccc",
+    opacity: 0.6,
+  },
   rotatedText: {
     transform: [{ rotate: '-90deg' }], // Rotates text 90 degrees to the left
     fontSize: 60,

@@ -11,6 +11,8 @@ export default function Page() {
 
   const instruct = "Fill in all the boxes below \n and press 'Make my Hall Pass' to get your pass!";
 
+  const isComplete = person.trim() !== "" && adjective.trim() !== "" && event.trim() !== "";
+
   const clearFields = () => {
     onChangeName("");
     onChangeAdjective("");
@@ -41,17 +43,23 @@ export default function Page() {
         placeholder="An Event"
       />
       <View style={Styles.container}>
-        <Link
-        style={Styles.button}
-        href={{
-          pathname: "/page2",
-          params: { person, adjective, event },
-        }} asChild
-        >
-          <Pressable>
+        {isComplete ? (
+          <Link
+          style={Styles.button}
+          href={{
+            pathname: "/page2",
+            params: { person, adjective, event },
+          }} asChild
+          >
+            <Pressable>
+              <Text>Make my Hall Pass!</Text>
+            </Pressable>
+          </Link>
+        ) : (
+          <Pressable disabled style={[Styles.button, Styles.buttonDisabled]}>
             <Text>Make my Hall Pass!</Text>
           </Pressable>
-        </Link>
+        )}
         <Pressable style={Styles.button} onPress={clearFields}>
           <Text>Clear Text</Text>
         </Pressable>
