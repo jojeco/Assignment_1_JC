@@ -46,17 +46,26 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   rotatedText: {
+    // RN's `rotate` transform only repaints the text — it does NOT reflow the
+    // element's original (unrotated) layout box, so this Text still reserves
+    // ~320x70 in the row even though it *looks* ~70 wide by ~320 tall.
+    // `width` is set above the ~320px the label needs at fontSize 60 so it can
+    // never wrap to a second line, and the horizontal margins cancel out the
+    // excess: -(360 - 80) / 2 = -140 collapses the reserved box back down to
+    // leftContainer's 80px while keeping the label centred on it.
     transform: [{ rotate: '-90deg' }], // Rotates text 90 degrees to the left
     fontSize: 60,
-    margin: -1000,
-    left: -50,
+    width: 360,
+    textAlign: "center",
+    marginHorizontal: -140,
   },
   sentence: {
     fontSize: 35,
     marginBottom: 15,
   },
   leftContainer: {
-    flex: 1,
+    // Matches the rotated label's visual width (one ~70px line box) plus slack.
+    width: 80,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -65,7 +74,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     margin: 10,
-    left: -60,
   },
   signatureBox: {
     borderColor: "#000033",
