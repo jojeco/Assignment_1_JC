@@ -29,18 +29,21 @@ export default function Page() {
         onChangeText={onChangeName}
         value={person}
         placeholder="A Name"
+        accessibilityLabel="Name"
       />
       <TextInput
         style={Styles.input}
         onChangeText={onChangeAdjective}
         value={adjective}
         placeholder="Adjective"
+        accessibilityLabel="Adjective"
       />
       <TextInput
         style={Styles.input}
         onChangeText={onChangeEvent}
         value={event}
         placeholder="An Event"
+        accessibilityLabel="Event"
       />
       <View style={Styles.container}>
         {isComplete ? (
@@ -51,16 +54,20 @@ export default function Page() {
             params: { person, adjective, event },
           }} asChild
           >
-            <Pressable>
+            <Pressable accessibilityLabel="Make my Hall Pass">
               <Text>Make my Hall Pass!</Text>
             </Pressable>
           </Link>
         ) : (
-          <Pressable disabled style={[Styles.button, Styles.buttonDisabled]}>
+          <Pressable
+            disabled
+            style={[Styles.button, Styles.buttonDisabled]}
+            accessibilityLabel="Make my Hall Pass, disabled until all fields are filled"
+          >
             <Text>Make my Hall Pass!</Text>
           </Pressable>
         )}
-        <Pressable style={Styles.button} onPress={clearFields}>
+        <Pressable style={Styles.button} onPress={clearFields} accessibilityLabel="Clear all fields">
           <Text>Clear Text</Text>
         </Pressable>
       </View>
