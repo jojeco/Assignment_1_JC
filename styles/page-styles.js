@@ -85,13 +85,18 @@ const styles = StyleSheet.create({
     maxHeight: 250,
     maxWidth: 350,
   },
-  placeholder: {
-    position: 'absolute',
-    alignSelf: 'center',
-    top: '50%',
-    zIndex: 1, 
-    color: 'grey',
-    fontSize: 20,
+  signaturePreview: {
+    width: 350,
+    height: 150,
+    borderColor: "#000033",
+    borderWidth: 1,
+    marginBottom: 30,
+    marginTop: 15,
+  },
+  signedText: {
+    fontSize: 18,
+    color: "#38434D",
+    marginBottom: 15,
   },
   header: {
     flexDirection: "row",
