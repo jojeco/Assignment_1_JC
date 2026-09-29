@@ -1,4 +1,4 @@
-import { Pressable, Text, TextInput, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from "react-native";
 import React from "react";
 import Styles from "../styles/page-styles";
 import { Link } from "expo-router";
@@ -20,7 +20,7 @@ export default function Page() {
   }
 
   return (
-    <View style={Styles.page}>
+    <KeyboardAvoidingView style={Styles.page} behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <Text style={Styles.title}>Assignment 1</Text>
       <Text style={Styles.subtitle}>Hall Pass Mad Libs</Text>
       <Text style={Styles.instStyle}>{instruct}</Text>
@@ -71,6 +71,6 @@ export default function Page() {
           <Text>Clear Text</Text>
         </Pressable>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
