@@ -45,6 +45,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#cccccc",
     opacity: 0.6,
   },
+  charCount: {
+    fontSize: 12,
+    color: "#888888",
+    textAlign: "right",
+    width: "80%",
+    marginTop: -10,
+  },
+  missingHint: {
+    fontSize: 14,
+    color: "#999999",
+    textAlign: "center",
+    marginBottom: 10,
+  },
   rotatedText: {
     // RN's `rotate` transform only repaints the text — it does NOT reflow the
     // element's original (unrotated) layout box, so this Text still reserves

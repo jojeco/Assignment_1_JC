@@ -5,11 +5,19 @@ import { Link, useLocalSearchParams } from "expo-router";
 import Styles from "../styles/page-styles";
 import Signature from "react-native-signature-canvas";
 
+const firstParam = (v) => {
+  const value = Array.isArray(v) ? v[0] : v;
+  if (value === undefined || value === null) {
+    return "";
+  }
+  return String(value).trim();
+};
+
 export default function Page() {
   const params = useLocalSearchParams();
-  const person = params.person || "__________";
-  const adjective = params.adjective || "__________";
-  const event = params.event || "__________";
+  const person = firstParam(params.person) || "__________";
+  const adjective = firstParam(params.adjective) || "__________";
+  const event = firstParam(params.event) || "__________";
 
   const [signature, setSignature] = useState(null);
   const [signedAt, setSignedAt] = useState(null);
