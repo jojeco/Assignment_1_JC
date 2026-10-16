@@ -1,9 +1,11 @@
 // page2.js
 import { Alert, Image, Pressable, Text, View } from "react-native";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Link, useLocalSearchParams } from "expo-router";
 import Styles from "../styles/page-styles";
 import Signature from "react-native-signature-canvas";
+
+const BLANK_PLACEHOLDER = "__________";
 
 const firstParam = (v) => {
   const value = Array.isArray(v) ? v[0] : v;
@@ -15,13 +17,12 @@ const firstParam = (v) => {
 
 export default function Page() {
   const params = useLocalSearchParams();
-  const person = firstParam(params.person) || "__________";
-  const adjective = firstParam(params.adjective) || "__________";
-  const event = firstParam(params.event) || "__________";
+  const person = firstParam(params.person) || BLANK_PLACEHOLDER;
+  const adjective = firstParam(params.adjective) || BLANK_PLACEHOLDER;
+  const event = firstParam(params.event) || BLANK_PLACEHOLDER;
 
   const [signature, setSignature] = useState(null);
   const [signedAt, setSignedAt] = useState(null);
-  const signatureRef = useRef(null);
 
   const formatTime = (date) => {
     const hours = String(date.getHours()).padStart(2, "0");
@@ -30,9 +31,7 @@ export default function Page() {
   };
 
   const handleResign = () => {
-    // The <Signature> canvas unmounts while a signature is set (see the
-    // ternary below), so it always remounts fresh — no need to call
-    // signatureRef.current.clearSignature() here.
+    // <Signature> unmounts while a signature is set, so it remounts blank.
     setSignature(null);
     setSignedAt(null);
   };
@@ -80,7 +79,6 @@ export default function Page() {
         </>
       ) : (
         <Signature
-          ref={signatureRef}
           style={Styles.signatureBox}
           descriptionText=""
           webStyle={`.m-signature-pad {border: 1px solid black;}`}
