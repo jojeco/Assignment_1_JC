@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link, useLocalSearchParams } from "expo-router";
 import Styles from "../styles/page-styles";
 import Signature from "react-native-signature-canvas";
+import { fillTemplate, getTemplate, nextTemplateId } from "../lib/madlibs";
 
 const BLANK_PLACEHOLDER = "__________";
 
@@ -21,6 +22,7 @@ export default function Page() {
   const adjective = firstParam(params.adjective) || BLANK_PLACEHOLDER;
   const event = firstParam(params.event) || BLANK_PLACEHOLDER;
 
+  const [templateId, setTemplateId] = useState(() => getTemplate(firstParam(params.template)).id);
   const [signature, setSignature] = useState(null);
   const [signedAt, setSignedAt] = useState(null);
 
@@ -41,7 +43,14 @@ export default function Page() {
   const month = currentDate.getMonth() + 1; // Month (0-11, so add 1)
   const year = currentDate.getFullYear(); // Year
 
-  const sentence = `${person} thought today was way too ${adjective}, so instead of going to ${event} they stayed home.`;
+  const storyTitle = getTemplate(templateId).title;
+  const sentenceSegments = fillTemplate(templateId, { person, adjective, event, placeholder: BLANK_PLACEHOLDER });
+
+  const handleNewStory = () => {
+    // Only swaps templateId; signature/signedAt state is untouched above,
+    // so re-rolling the story never clears an already-captured signature.
+    setTemplateId(nextTemplateId(templateId));
+  };
 
   return (
     <View style={Styles.page}>
@@ -55,7 +64,19 @@ export default function Page() {
         </View>
         <View style={Styles.rightContainer}>
           <Text style={Styles.subtitle}>Date: {day}/{month}/{year}</Text>
-          <Text style={Styles.sentence}>{sentence}</Text>
+          <Text style={Styles.storyTitle}>{storyTitle}</Text>
+          <Text style={Styles.sentence}>
+            {sentenceSegments.map((seg, i) => (
+              <Text key={i} style={seg.field ? Styles.filledWord : null}>{seg.text}</Text>
+            ))}
+          </Text>
+          <Pressable
+            style={Styles.smallButton}
+            onPress={handleNewStory}
+            accessibilityLabel="Show a different story"
+          >
+            <Text>New story</Text>
+          </Pressable>
         </View>
       </View>
       <Text style={Styles.subtitle}>

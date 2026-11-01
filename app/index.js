@@ -2,6 +2,7 @@ import { KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from
 import React from "react";
 import Styles from "../styles/page-styles";
 import { Link, router } from "expo-router";
+import { TEMPLATES, DEFAULT_TEMPLATE_ID, randomTemplateId } from "../lib/madlibs";
 
 const LIMITS = {
   name: 30,
@@ -14,6 +15,7 @@ export default function Page() {
   const [person, onChangeName] = React.useState("");
   const [adjective, onChangeAdjective] = React.useState("");
   const [event, onChangeEvent] = React.useState("");
+  const [templateId, setTemplateId] = React.useState(DEFAULT_TEMPLATE_ID);
 
   const nameRef = React.useRef(null);
   const adjectiveRef = React.useRef(null);
@@ -27,6 +29,7 @@ export default function Page() {
     person: person.trim(),
     adjective: adjective.trim(),
     event: event.trim(),
+    template: templateId,
   };
 
   const missingFields = [
@@ -57,6 +60,8 @@ export default function Page() {
     onChangeName("");
     onChangeAdjective("");
     onChangeEvent("");
+    // templateId is intentionally left alone: clearing the words someone
+    // typed shouldn't also throw away the story they picked for them.
     nameRef.current?.focus();
   }
 
@@ -65,6 +70,27 @@ export default function Page() {
       <Text style={Styles.title}>Assignment 1</Text>
       <Text style={Styles.subtitle}>Hall Pass Mad Libs</Text>
       <Text style={Styles.instStyle}>{instruct}</Text>
+      <Text style={Styles.subtitle}>Pick a story:</Text>
+      <View style={Styles.chipRow}>
+        {TEMPLATES.map((t) => (
+          <Pressable
+            key={t.id}
+            style={[Styles.chip, t.id === templateId && Styles.chipSelected]}
+            onPress={() => setTemplateId(t.id)}
+            accessibilityLabel={`Story: ${t.title}`}
+            accessibilityState={{ selected: t.id === templateId }}
+          >
+            <Text style={Styles.chipText}>{t.title}</Text>
+          </Pressable>
+        ))}
+        <Pressable
+          style={Styles.chip}
+          onPress={() => setTemplateId(randomTemplateId(templateId))}
+          accessibilityLabel="Story: Surprise me"
+        >
+          <Text style={Styles.chipText}>Surprise me</Text>
+        </Pressable>
+      </View>
       <TextInput
         ref={nameRef}
         style={Styles.input}

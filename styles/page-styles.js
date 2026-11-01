@@ -118,5 +118,44 @@ const styles = StyleSheet.create({
     marginRight: 20,
     padding: 10,
   },
+  chipRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "90%",
+    marginBottom: 10,
+  },
+  chip: {
+    backgroundColor: "#eeeeee",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    margin: 5,
+  },
+  chipSelected: {
+    // Reuses the same accent color as the primary `button` style above.
+    backgroundColor: "lightgreen",
+  },
+  chipText: {
+    fontSize: 14,
+  },
+  filledWord: {
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+  },
+  storyTitle: {
+    fontSize: 16,
+    fontStyle: "italic",
+    color: "#38434D",
+    marginBottom: 10,
+  },
+  smallButton: {
+    backgroundColor: "lightgreen",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    marginTop: 10,
+  },
 });
 export default styles;
