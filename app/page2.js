@@ -6,8 +6,6 @@ import Styles from "../styles/page-styles";
 import Signature from "react-native-signature-canvas";
 import { fillTemplate, getTemplate, nextTemplateId } from "../lib/madlibs";
 
-const BLANK_PLACEHOLDER = "__________";
-
 const firstParam = (v) => {
   const value = Array.isArray(v) ? v[0] : v;
   if (value === undefined || value === null) {
@@ -18,9 +16,9 @@ const firstParam = (v) => {
 
 export default function Page() {
   const params = useLocalSearchParams();
-  const person = firstParam(params.person) || BLANK_PLACEHOLDER;
-  const adjective = firstParam(params.adjective) || BLANK_PLACEHOLDER;
-  const event = firstParam(params.event) || BLANK_PLACEHOLDER;
+  const person = firstParam(params.person);
+  const adjective = firstParam(params.adjective);
+  const event = firstParam(params.event);
 
   const [templateId, setTemplateId] = useState(() => getTemplate(firstParam(params.template)).id);
   const [signature, setSignature] = useState(null);
@@ -44,7 +42,7 @@ export default function Page() {
   const year = currentDate.getFullYear(); // Year
 
   const storyTitle = getTemplate(templateId).title;
-  const sentenceSegments = fillTemplate(templateId, { person, adjective, event, placeholder: BLANK_PLACEHOLDER });
+  const sentenceSegments = fillTemplate(templateId, { person, adjective, event });
 
   const handleNewStory = () => {
     // Only swaps templateId; signature/signedAt state is untouched above,
