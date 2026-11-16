@@ -2,41 +2,49 @@ import { KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from
 import React from "react";
 import Styles from "../styles/page-styles";
 import { Link, router } from "expo-router";
-import { TEMPLATES, DEFAULT_TEMPLATE_ID, randomTemplateId } from "../lib/madlibs";
+import { TEMPLATES, DEFAULT_TEMPLATE_ID, randomTemplateId, requiredFields } from "../lib/madlibs";
 
 const LIMITS = {
   name: 30,
   adjective: 20,
   event: 40,
+  noun: 20,
 };
+
+const FIELD_LABELS = { person: "Name", adjective: "Adjective", event: "Event", noun: "Noun" };
 
 export default function Page() {
 
   const [person, onChangeName] = React.useState("");
   const [adjective, onChangeAdjective] = React.useState("");
   const [event, onChangeEvent] = React.useState("");
+  const [noun, onChangeNoun] = React.useState("");
   const [templateId, setTemplateId] = React.useState(DEFAULT_TEMPLATE_ID);
 
   const nameRef = React.useRef(null);
   const adjectiveRef = React.useRef(null);
   const eventRef = React.useRef(null);
+  const nounRef = React.useRef(null);
 
   const instruct = "Fill in all the boxes below \n and press 'Make my Hall Pass' to get your pass!";
 
-  const isComplete = person.trim() !== "" && adjective.trim() !== "" && event.trim() !== "";
+  const needed = requiredFields(templateId);
+  const needsNoun = needed.includes("noun");
+
+  const values = { person, adjective, event, noun };
+  const isComplete = needed.every((field) => values[field].trim() !== "");
 
   const trimmedParams = {
     person: person.trim(),
     adjective: adjective.trim(),
     event: event.trim(),
+    noun: noun.trim(),
     template: templateId,
   };
 
-  const missingFields = [
-    trimmedParams.person === "" ? "Name" : null,
-    trimmedParams.adjective === "" ? "Adjective" : null,
-    trimmedParams.event === "" ? "Event" : null,
-  ].filter(Boolean);
+  const missingFields = needed
+    .filter((field) => trimmedParams[field] === "")
+    .map((field) => FIELD_LABELS[field]);
 
   const focusFirstEmpty = () => {
     if (trimmedParams.person === "") {
@@ -45,6 +53,8 @@ export default function Page() {
       adjectiveRef.current?.focus();
     } else if (trimmedParams.event === "") {
       eventRef.current?.focus();
+    } else if (needsNoun && trimmedParams.noun === "") {
+      nounRef.current?.focus();
     }
   };
 
@@ -60,6 +70,7 @@ export default function Page() {
     onChangeName("");
     onChangeAdjective("");
     onChangeEvent("");
+    onChangeNoun("");
     // templateId is intentionally left alone: clearing the words someone
     // typed shouldn't also throw away the story they picked for them.
     nameRef.current?.focus();
@@ -126,10 +137,27 @@ export default function Page() {
         accessibilityLabel="Event"
         maxLength={LIMITS.event}
         autoCapitalize="words"
-        returnKeyType="done"
-        onSubmitEditing={handleEventSubmit}
+        returnKeyType={needsNoun ? "next" : "done"}
+        onSubmitEditing={() => (needsNoun ? nounRef.current?.focus() : handleEventSubmit())}
       />
       <Text style={Styles.charCount}>{event.length}/{LIMITS.event}</Text>
+      {needsNoun && (
+        <>
+          <TextInput
+            ref={nounRef}
+            style={Styles.input}
+            onChangeText={onChangeNoun}
+            value={noun}
+            placeholder="A Noun"
+            accessibilityLabel="Noun"
+            maxLength={LIMITS.noun}
+            autoCapitalize="none"
+            returnKeyType="done"
+            onSubmitEditing={handleEventSubmit}
+          />
+          <Text style={Styles.charCount}>{noun.length}/{LIMITS.noun}</Text>
+        </>
+      )}
       {!isComplete && (
         <Text style={Styles.missingHint}>Still needed: {missingFields.join(", ")}</Text>
       )}

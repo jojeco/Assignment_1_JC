@@ -11,6 +11,7 @@ import {
   renderSentence,
   nextTemplateId,
   randomTemplateId,
+  requiredFields,
 } from "../lib/madlibs.js";
 
 const TOKENS = ["{person}", "{adjective}", "{event}"];
@@ -133,5 +134,34 @@ test("randomTemplateId never returns excludeId across 200 real Math.random draws
     const result = randomTemplateId(excludeId);
     assert.notEqual(result, excludeId);
     assert.ok(TEMPLATES.some((t) => t.id === result), "must always return a real template id");
+  }
+});
+
+test("requiredFields: default gives 3 fields, a noun template gives 4, unknown id falls back to default", () => {
+  assert.deepEqual(requiredFields(DEFAULT_TEMPLATE_ID), ["person", "adjective", "event"]);
+  assert.deepEqual(requiredFields("science-fair"), ["person", "adjective", "event", "noun"]);
+  assert.deepEqual(requiredFields("not-a-real-id"), requiredFields(DEFAULT_TEMPLATE_ID));
+});
+
+test("fillTemplate puts a noun value in a noun-field segment, and placeholders it when missing", () => {
+  const withNoun = fillTemplate("science-fair", { ...SAMPLE_VALUES, noun: "frog" });
+  assert.ok(withNoun.some((s) => s.field === "noun" && s.text === "frog"));
+
+  const withoutNoun = fillTemplate("science-fair", SAMPLE_VALUES);
+  assert.ok(withoutNoun.some((s) => s.field === "noun" && s.text === "__________"));
+});
+
+test("nextTemplateId with values lacking a noun never lands on a noun template", () => {
+  const valuesWithoutNoun = { ...SAMPLE_VALUES };
+  for (const start of TEMPLATES) {
+    const result = nextTemplateId(start.id, valuesWithoutNoun);
+    assert.ok(!requiredFields(result).includes("noun"), `landed on noun template from ${start.id}`);
+  }
+});
+
+test("nextTemplateId with a filled-in noun matches the plain no-values cycle for every id", () => {
+  const valuesWithNoun = { ...SAMPLE_VALUES, noun: "frog" };
+  for (const start of TEMPLATES) {
+    assert.equal(nextTemplateId(start.id, valuesWithNoun), nextTemplateId(start.id));
   }
 });

@@ -19,6 +19,7 @@ export default function Page() {
   const person = firstParam(params.person);
   const adjective = firstParam(params.adjective);
   const event = firstParam(params.event);
+  const noun = firstParam(params.noun);
 
   const [templateId, setTemplateId] = useState(() => getTemplate(firstParam(params.template)).id);
   const [signature, setSignature] = useState(null);
@@ -42,12 +43,14 @@ export default function Page() {
   const year = currentDate.getFullYear(); // Year
 
   const storyTitle = getTemplate(templateId).title;
-  const sentenceSegments = fillTemplate(templateId, { person, adjective, event });
+  const sentenceSegments = fillTemplate(templateId, { person, adjective, event, noun });
 
   const handleNewStory = () => {
     // Only swaps templateId; signature/signedAt state is untouched above,
     // so re-rolling the story never clears an already-captured signature.
-    setTemplateId(nextTemplateId(templateId));
+    // Passing the current values keeps "New story" off any story whose
+    // required word (e.g. noun) wasn't filled in on the form screen.
+    setTemplateId(nextTemplateId(templateId, { person, adjective, event, noun }));
   };
 
   return (
