@@ -5,7 +5,7 @@ import { Link, router } from "expo-router";
 import { TEMPLATES, DEFAULT_TEMPLATE_ID, randomTemplateId, requiredFields } from "../lib/madlibs";
 
 const LIMITS = {
-  name: 30,
+  person: 30,
   adjective: 20,
   event: 40,
   noun: 20,
@@ -25,6 +25,7 @@ export default function Page() {
   const adjectiveRef = React.useRef(null);
   const eventRef = React.useRef(null);
   const nounRef = React.useRef(null);
+  const fieldRefs = { person: nameRef, adjective: adjectiveRef, event: eventRef, noun: nounRef };
 
   const instruct = "Fill in all the boxes below \n and press 'Make my Hall Pass' to get your pass!";
 
@@ -47,15 +48,8 @@ export default function Page() {
     .map((field) => FIELD_LABELS[field]);
 
   const focusFirstEmpty = () => {
-    if (trimmedParams.person === "") {
-      nameRef.current?.focus();
-    } else if (trimmedParams.adjective === "") {
-      adjectiveRef.current?.focus();
-    } else if (trimmedParams.event === "") {
-      eventRef.current?.focus();
-    } else if (needsNoun && trimmedParams.noun === "") {
-      nounRef.current?.focus();
-    }
+    const first = needed.find((field) => trimmedParams[field] === "");
+    if (first) fieldRefs[first].current?.focus();
   };
 
   const handleEventSubmit = () => {
@@ -109,12 +103,12 @@ export default function Page() {
         value={person}
         placeholder="A Name"
         accessibilityLabel="Name"
-        maxLength={LIMITS.name}
+        maxLength={LIMITS.person}
         autoCapitalize="words"
         returnKeyType="next"
         onSubmitEditing={() => adjectiveRef.current?.focus()}
       />
-      <Text style={Styles.charCount}>{person.length}/{LIMITS.name}</Text>
+      <Text style={Styles.charCount}>{person.length}/{LIMITS.person}</Text>
       <TextInput
         ref={adjectiveRef}
         style={Styles.input}
